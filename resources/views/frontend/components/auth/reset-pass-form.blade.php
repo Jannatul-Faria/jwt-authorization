@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="header">
+        <div class="row">
+            <div class="col-md 4">
+                <div class="float-end mt-3">
+                    <span>
+                        <a class="text-center ms-3 h6" href="{{ url('/') }}">Back </a>
+
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-5 center-screen">
+            <div class="card animated fadeIn w-90 p-4">
+                <div class="card-body">
+                    <h4>SET NEW PASSWORD</h4>
+                    <br />
+                    <label>New Password</label>
+                    <input id="password" placeholder="New Password" class="form-control" type="password" />
+                    <br />
+                    <label>Confirm Password</label>
+                    <input id="cpassword" placeholder="Confirm Password" class="form-control" type="password" />
+                    <br />
+                    <button onclick="ResetPass()" class="btn w-100 bg-gradient-info">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    async function ResetPass() {
+        let password = document.getElementById('password').value;
+        let cpassword = document.getElementById('cpassword').value;
+
+        if (password.length === 0) {
+            errorToast('password is required .')
+        } else if (cpassword.length === 0) {
+            errorToast('Confirm password is required .')
+        } else if (cpassword !== password) {
+            errorToast('Password and confirm password must be same.')
+        } else {
+            showLoader();
+            let res = await axios.post("resetPass", {
+                password: password
+            });
+            hideLoader();
+
+            if (res.status === 200 && res.data['status'] === 'success') {
+                successToast(res.data['message'])
+                // debugger;
+                setTimeout(function() {
+                    window.location.href = "/login";
+                }, 1000)
+            } else {
+                errorToast(res.data['message'])
+            }
+        }
+    }
+</script>
